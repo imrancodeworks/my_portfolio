@@ -1,0 +1,8 @@
+.footer{
+  text-align:center;
+  padding:36px 0 52px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--text-faint);
+}
+.dot{margin:0 8px;}

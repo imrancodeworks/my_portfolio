@@ -1,0 +1,392 @@
+/* ═══════════════════════════════════════
+   SECTION SHELL — #2F2FE4 bg
+═══════════════════════════════════════ */
+.section {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  background-color: #2F2FE4;
+}
+
+/* ═══════════════════════════════════════
+   BACKGROUND LAYER
+═══════════════════════════════════════ */
+.bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Glowing orbs — deep blues & purples */
+.orb1, .orb2, .orb3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+.orb1 {
+  width: 700px; height: 600px;
+  background: rgba(80, 80, 255, 0.45);
+  top: -20%; left: -15%;
+  animation: orbFloat1 14s ease-in-out infinite alternate;
+}
+.orb2 {
+  width: 550px; height: 500px;
+  background: rgba(120, 0, 255, 0.35);
+  bottom: -15%; right: 30%;
+  animation: orbFloat2 11s ease-in-out infinite alternate;
+}
+.orb3 {
+  width: 400px; height: 400px;
+  background: rgba(0, 200, 255, 0.2);
+  top: 20%; right: -10%;
+  animation: orbFloat3 9s ease-in-out infinite alternate;
+}
+@keyframes orbFloat1 { from { transform: translate(0,0); }    to { transform: translate(60px, 50px); } }
+@keyframes orbFloat2 { from { transform: translate(0,0); }    to { transform: translate(-50px,-40px); } }
+@keyframes orbFloat3 { from { transform: translate(0,0) scaleX(1); } to { transform: translate(30px, 60px) scaleX(1.15); } }
+
+/* Electric sparks / lightning bolts */
+.spark {
+  position: absolute;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to top, transparent, rgba(150, 200, 255, 0.9), transparent);
+  border-radius: 2px;
+  animation: sparkFlash linear infinite;
+  opacity: 0;
+}
+@keyframes sparkFlash {
+  0%   { opacity: 0;   transform: scaleY(0.3) translateY(0); }
+  10%  { opacity: 0.9; transform: scaleY(1)   translateY(0); }
+  30%  { opacity: 0.5; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* Cat tails swaying at bottom */
+.catTail {
+  position: absolute;
+  bottom: -10px;
+  width: 8px;
+  height: 120px;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.25), transparent);
+  border-radius: 0 0 50% 50% / 0 0 20px 20px;
+  transform-origin: bottom center;
+  animation: tailSway ease-in-out infinite alternate;
+}
+@keyframes tailSway {
+  0%   { transform: rotate(-30deg) scaleY(1);   }
+  100% { transform: rotate(30deg)  scaleY(1.1); }
+}
+
+/* Paw prints floating */
+.paw {
+  position: absolute;
+  animation: pawPulse ease-in-out infinite alternate;
+}
+@keyframes pawPulse {
+  0%   { opacity: 0.06; transform: scale(0.95) rotate(var(--r, 0deg)); }
+  100% { opacity: 0.22; transform: scale(1.05) rotate(var(--r, 0deg)); }
+}
+
+/* Horizontal light waves (aurora effect) */
+.wave1, .wave2, .wave3 {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  border-radius: 2px;
+  filter: blur(3px);
+}
+.wave1 {
+  top: 25%;
+  background: linear-gradient(90deg, transparent, rgba(120,180,255,0.5), transparent);
+  animation: waveSweep 8s ease-in-out infinite;
+}
+.wave2 {
+  top: 55%;
+  background: linear-gradient(90deg, transparent, rgba(180,100,255,0.4), transparent);
+  animation: waveSweep 11s ease-in-out infinite reverse;
+}
+.wave3 {
+  top: 78%;
+  background: linear-gradient(90deg, transparent, rgba(80,220,255,0.35), transparent);
+  animation: waveSweep 7s ease-in-out infinite 2s;
+}
+@keyframes waveSweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(100%);  opacity: 0; }
+}
+
+/* ═══════════════════════════════════════
+   2-TAILS BEAST — top-left ➜ right centre
+═══════════════════════════════════════ */
+.beastWrap {
+  position: absolute;
+  top: 50%;
+  right: 4%;
+  width: 450px;
+  height: 450px;
+  pointer-events: none;
+  z-index: 3;
+
+  /* Start: far off-screen at top-left */
+  transform: translate(calc(-120vw), calc(-120vh)) rotate(-25deg) scale(0.5);
+  opacity: 0;
+  transition:
+    transform 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+    opacity   0.9s ease-out 0.2s;
+}
+
+.beastVisible {
+  transform: translateY(-50%) rotate(0deg) scale(1);
+  opacity: 1;
+}
+
+.beastImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  animation:
+    floatBeast 5s ease-in-out infinite alternate,
+    blueFlame  3.5s ease-in-out infinite alternate;
+}
+
+@keyframes floatBeast {
+  0%   { transform: translateY(-14px) rotate(-2deg); }
+  100% { transform: translateY(14px)  rotate(2deg); }
+}
+@keyframes blueFlame {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 20px rgba(100, 180, 255, 0.7))
+      drop-shadow(0 0 50px rgba(50, 100, 255, 0.4));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 35px rgba(150, 220, 255, 1))
+      drop-shadow(0 0 80px rgba(80, 150, 255, 0.7));
+  }
+}
+
+/* Aura rings — electric blue */
+.auraRing, .auraRing2, .auraRing3 {
+  position: absolute;
+  top: 50%; left: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.auraRing {
+  width: 82%; height: 82%;
+  border: 2px solid rgba(100, 180, 255, 0.6);
+  animation: pulseAura 3.5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 40px rgba(80, 160, 255, 0.4), inset 0 0 25px rgba(80, 160, 255, 0.2);
+}
+.auraRing2 {
+  width: 105%; height: 105%;
+  border: 1.5px solid rgba(140, 200, 255, 0.35);
+  animation: pulseAura 3.5s infinite cubic-bezier(0.4, 0, 0.2, 1) 1.2s;
+}
+.auraRing3 {
+  width: 128%; height: 128%;
+  border: 1px solid rgba(180, 220, 255, 0.2);
+  animation: pulseAura 3.5s infinite cubic-bezier(0.4, 0, 0.2, 1) 2.4s;
+}
+@keyframes pulseAura {
+  0%   { transform: translate(-50%,-50%) scale(0.85); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1.45); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════
+   LEFT CONTENT — fades in AFTER beast lands
+═══════════════════════════════════════ */
+.content {
+  position: relative;
+  z-index: 4;
+  max-width: var(--maxw);
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 48px;
+
+  /* hidden until beast lands */
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateX(-50px);
+  transition:
+    opacity   1.4s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+    filter    1.4s ease-out;
+}
+.contentVisible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}
+
+.title {
+  font-family: var(--display);
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  margin-bottom: 36px;
+}
+
+/* ═══════════════════════════════════════
+   COLS — timeline + achievements
+═══════════════════════════════════════ */
+.cols {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 24px;
+  max-width: 55%;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+.item {
+  border-left: 2px solid rgba(150, 200, 255, 0.4);
+  padding: 2px 0 28px 22px;
+  position: relative;
+}
+.item:last-child { padding-bottom: 0; }
+.item::before {
+  content: '';
+  position: absolute;
+  left: -6px; top: 2px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: rgba(120, 200, 255, 1);
+  box-shadow: 0 0 0 4px rgba(120, 200, 255, 0.25), 0 0 12px rgba(120, 200, 255, 0.6);
+}
+.item h4 {
+  font-family: var(--display);
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.school {
+  display: block;
+  color: rgba(200, 220, 255, 0.85);
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+.year {
+  display: block;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: rgba(170, 200, 255, 0.75);
+}
+
+.panel {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+}
+.panel h4 {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: rgba(150, 220, 255, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 18px;
+}
+.panel ul {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.panel li {
+  font-size: 16px;
+  color: rgba(210, 225, 255, 0.9);
+  display: flex;
+  gap: 10px;
+  line-height: 1.6;
+}
+.panel li::before {
+  content: '›';
+  color: rgba(120, 200, 255, 1);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ───────────────────────────────────────
+   RESPONSIVE
+─────────────────────────────────────── */
+
+/* lg — tablets landscape (max 1080px) */
+@media (max-width: 1080px) {
+  .cols { max-width: 65%; }
+  .beastWrap { width: 350px; height: 350px; right: 1%; }
+  .content { padding: 0 32px; }
+}
+
+/* md — tablets portrait (max 980px) */
+@media (max-width: 980px) {
+  .cols { max-width: 100%; grid-template-columns: 1fr; gap: 32px; }
+  .beastWrap { width: 280px; height: 280px; right: 2%; }
+  .content { padding: 0 24px; }
+}
+
+/* sm — phones (max 680px) */
+@media (max-width: 680px) {
+  .section { height: auto; min-height: 100vh; min-height: 100svh; padding: 80px 0 40px; }
+  .beastWrap {
+    position: relative;
+    top: auto; right: auto;
+    width: 200px; height: 200px;
+    margin: 0 auto 24px;
+    transform: none !important;
+    opacity: 0.85;
+  }
+  .content { padding: 0 16px; }
+  .title { font-size: clamp(26px, 7vw, 38px); margin-bottom: 24px; }
+  .item h4 { font-size: 17px; }
+  .school { font-size: 14px; }
+  .year { font-size: 12px; }
+  .panel li { font-size: 14px; }
+}
+
+/* xs — compact phones (max 480px) */
+@media (max-width: 480px) {
+  .section { padding: 72px 0 32px; }
+  .beastWrap { width: 160px; height: 160px; margin-bottom: 16px; }
+  .content { padding: 0 12px; }
+  .title { font-size: 24px; margin-bottom: 20px; }
+  .item h4 { font-size: 16px; }
+  .school { font-size: 13px; }
+  .panel h4 { font-size: 12px; }
+  .panel li { font-size: 13px; }
+  .cols { gap: 24px; }
+}
+
+/* 2xl — iMac / Studio Display (min 1920px) */
+@media (min-width: 1920px) {
+  .beastWrap { width: 540px; height: 540px; right: 5%; }
+  .content { padding: 0 64px; }
+  .title { font-size: clamp(52px, 4vw, 68px); }
+  .cols { max-width: 65%; gap: 32px; }
+  .item h4 { font-size: 24px; }
+  .school { font-size: 18px; }
+  .year { font-size: 15px; }
+  .panel li { font-size: 18px; }
+}

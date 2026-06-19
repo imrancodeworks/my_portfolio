@@ -1,0 +1,139 @@
+:root{
+  --bg: #050511;
+  --bg-1: #0A0A1A;
+  --bg-2: #12102A;
+  --line: #2D2A54;
+  --line-soft: #1E1C3A;
+  --text: #F3F3FA;
+  --text-dim: #A6A4C2;
+  --text-faint: #6A688C;
+  --accent: #FF6A1C;
+  --accent-2: #4BB8FA;
+  --accent-dim: #CC5516;
+  --amber: #FFD700;
+  --amber-dim: #8A6E00;
+  --danger: #FF3B3B;
+  --mc: 75, 184, 250;
+  --mc-accent: 255, 106, 28;
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --mono: 'JetBrains Mono', monospace;
+  --display: 'Carter One', system-ui;
+  --sans: 'Protest Guerrilla', sans-serif;
+  --maxw: 1140px;
+
+  /* ── Responsive breakpoints ──
+     xs  : 480px  – compact phones
+     sm  : 640px  – all phones inc. phablets
+     md  : 820px  – mini tablets / hamburger nav
+     lg  : 1080px – tablets landscape / 11-13" laptops
+     xl  : 1440px – 15-16" laptops / MacBook Pro 16
+     2xl : 1920px – 16"+ desktops, iMac 24"
+  */
+  --bp-xs: 480px;
+  --bp-sm: 640px;
+  --bp-md: 820px;
+  --bp-lg: 1080px;
+  --bp-xl: 1440px;
+  --bp-2xl: 1920px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{
+  scroll-behavior:smooth;
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100%;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  height: 100%;
+  /* Prevent iOS Safari horizontal bounce */
+  -webkit-overflow-scrolling: touch;
+}
+main {
+  scroll-snap-type: y mandatory;
+}
+/* Every top-level section snaps */
+main > section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ── Relax mandatory snap on small phones (prevents iOS jank) ── */
+@media (max-width: 640px) {
+  html { scroll-snap-type: y proximity; }
+  main { scroll-snap-type: y proximity; }
+  main > section { scroll-snap-stop: normal; }
+}
+
+/* ── Scale up container on ultra-wide displays ── */
+@media (min-width: 1920px) {
+  :root { --maxw: 1400px; }
+}
+@media (min-width: 2400px) {
+  :root { --maxw: 1600px; }
+}
+#root{position:relative; isolation:isolate;}
+
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit; cursor:pointer;}
+ul{list-style:none;}
+img,svg{display:block; max-width:100%;}
+
+::selection{background:var(--accent); color:#fff;}
+
+:focus-visible{
+  outline:2px solid var(--accent-2);
+  outline-offset:3px;
+  border-radius:4px;
+}
+
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--line); border-radius:6px;}
+::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+
+/* Global Animations */
+@keyframes floatY {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes floatX {
+  0% { transform: translateX(0px); }
+  50% { transform: translateX(8px); }
+  100% { transform: translateX(0px); }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 10px rgba(var(--mc-accent), 0.2); }
+  50% { box-shadow: 0 0 25px rgba(var(--mc-accent), 0.5); }
+  100% { box-shadow: 0 0 10px rgba(var(--mc-accent), 0.2); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+}
+
+.carter-one-regular {
+  font-family: "Carter One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.protest-guerrilla-regular {
+  font-family: "Protest Guerrilla", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* video & overlay styles are scoped to Hero.module.css */

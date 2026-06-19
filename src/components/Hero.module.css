@@ -1,0 +1,361 @@
+/* ═══════════════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh; /* iOS Safari safe viewport */
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: #050511;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ── Background video ── */
+.bgVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 0;
+  transform: scale(1.08);          /* hide watermark edges */
+  filter: contrast(1.3) saturate(1.5) brightness(1.05);
+  opacity: 0.88;
+  mix-blend-mode: screen;
+  animation: videoBreath 4s infinite alternate ease-in-out;
+  /* transition for the split moment */
+  transition:
+    left 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    width 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    height 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    top 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.4s ease;
+}
+
+/* After first play → slide to right column */
+.bgVideoRight {
+  left: 45%;
+  top: 0;
+  width: 58%;
+  height: 100%;
+  transform: scale(1.04);
+  filter: contrast(1.45) saturate(1.9) brightness(1.2) hue-rotate(8deg)
+          drop-shadow(-20px 0 60px rgba(75,184,250,0.6));
+  mix-blend-mode: screen;
+  animation:
+    narutoFloat 3.5s ease-in-out infinite 1.5s,
+    videoBreathSplit 3s infinite alternate ease-in-out 1.5s;
+}
+
+@keyframes videoBreath {
+  0%   { opacity: 0.78; filter: contrast(1.2) saturate(1.4) brightness(1.0); }
+  100% { opacity: 0.95; filter: contrast(1.4) saturate(1.7) brightness(1.15)
+                                drop-shadow(0 0 40px rgba(75,184,250,0.5)); }
+}
+
+@keyframes videoBreathSplit {
+  0%   { filter: contrast(1.4) saturate(1.8) brightness(1.15) hue-rotate(6deg)
+                 drop-shadow(-20px 0 50px rgba(255,106,28,0.6)); }
+  100% { filter: contrast(1.55) saturate(2.1) brightness(1.3) hue-rotate(14deg)
+                 drop-shadow(-20px 0 80px rgba(75,184,250,0.9)); }
+}
+
+@keyframes narutoFloat {
+  0%   { transform: scale(1.04) translateY(0px);  }
+  30%  { transform: scale(1.04) translateY(-14px); }
+  60%  { transform: scale(1.04) translateY(-6px);  }
+  80%  { transform: scale(1.04) translateY(-18px); }
+  100% { transform: scale(1.04) translateY(0px);  }
+}
+
+/* ── Overlay (text legibility) ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(5,5,17,0.55) 0%,
+    rgba(5,5,17,0.25) 55%,
+    transparent 100%
+  );
+  transition: background 1.4s ease;
+}
+
+/* After split → darken left half more for legibility */
+.overlayLeft {
+  background: linear-gradient(
+    90deg,
+    rgba(5,5,17,0.78) 0%,
+    rgba(5,5,17,0.65) 40%,
+    rgba(5,5,17,0.15) 55%,
+    transparent 100%
+  );
+}
+
+/* ── Hero content ── */
+.content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 120px 48px 80px;
+  transition:
+    max-width 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    padding  1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    margin   1.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* After split → constrain to left 45% */
+.contentLeft {
+  max-width: 52%;
+  margin: 0;
+  padding: 120px 0 80px 60px;
+  animation: contentSlideLeft 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes contentSlideLeft {
+  0%   { opacity: 0.6; transform: translateX(40px); }
+  55%  { opacity: 1;   transform: translateX(-8px);  }
+  100% { opacity: 1;   transform: translateX(0px);   }
+}
+
+/* ── Typography ── */
+.headline {
+  font-family: var(--display);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+
+.line {
+  display: block;
+  font-size: clamp(36px, 6vw, 72px);
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(5,5,17,0.8);
+  opacity: 0;
+}
+.inView .line {
+  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+}
+
+.lineAccent {
+  display: block;
+  font-size: clamp(18px, 3.2vw, 36px);
+  font-weight: 500;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-top: 8px;
+  opacity: 0;
+}
+.inView .lineAccent {
+  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.22s forwards;
+}
+
+@keyframes riseIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.summary {
+  margin-top: 28px;
+  max-width: 520px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: #e8e8f5;
+  text-shadow: 0 1px 12px rgba(5,5,17,0.7);
+  opacity: 0;
+}
+.inView .summary {
+  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.34s forwards;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 22px;
+  opacity: 0;
+}
+.inView .tags {
+  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.46s forwards;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 100px;
+  padding: 5px 13px;
+  background: rgba(5,5,17,0.45);
+  backdrop-filter: blur(6px);
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 36px;
+  opacity: 0;
+}
+.inView .actions {
+  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.58s forwards;
+}
+
+.btnPrimary, .btnGhost {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 26px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  transition: transform 0.22s, box-shadow 0.22s, background 0.22s, border-color 0.22s;
+}
+
+.btnPrimary {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 20px rgba(255,106,28,0.3);
+}
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px -8px rgba(255,106,28,0.65);
+}
+.btnPrimary svg { transition: transform 0.2s; }
+.btnPrimary:hover svg { transform: translateX(3px); }
+
+.btnGhost {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.22);
+  backdrop-filter: blur(6px);
+}
+.btnGhost:hover {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(75,184,250,0.2);
+}
+
+/* ── Scroll hint ── */
+.scrollHint {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 4;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.scrollLine {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
+  animation: scrollPulse 1.8s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.3; }
+  50%      { opacity: 1;   }
+}
+
+/* ── Responsive ── */
+
+/* lg — tablets landscape & 11-13" laptops (max 1080px) */
+@media (max-width: 1080px) {
+  .content { padding: 110px 36px 80px; }
+  .contentLeft {
+    max-width: 55%;
+    padding: 110px 0 80px 40px;
+  }
+}
+
+/* md — mini tablets portrait / hamburger breakpoint (max 900px) */
+@media (max-width: 900px) {
+  .bgVideoRight {
+    left: 0;
+    width: 100%;
+    opacity: 0.45;
+  }
+  .contentLeft {
+    max-width: 100%;
+    padding: 100px 28px 80px;
+  }
+  .overlayLeft {
+    background: rgba(5,5,17,0.72);
+  }
+}
+
+/* sm — all phones (max 720px) */
+@media (max-width: 720px) {
+  .content { padding: 90px 20px 70px; }
+  .contentLeft { padding: 90px 20px 70px; }
+  .scrollHint { display: none; }
+  .line { font-size: clamp(28px, 8vw, 48px); }
+  .lineAccent { font-size: clamp(15px, 4.5vw, 24px); }
+  .summary { font-size: 14.5px; margin-top: 20px; }
+  .tags { margin-top: 16px; }
+  .actions { margin-top: 28px; gap: 10px; }
+}
+
+/* xs — compact phones (max 480px) */
+@media (max-width: 480px) {
+  .content, .contentLeft {
+    padding: 80px 16px 60px;
+    max-width: 100%;
+    margin: 0;
+  }
+  .line { font-size: clamp(26px, 9.5vw, 40px); }
+  .lineAccent { font-size: clamp(13px, 5vw, 20px); }
+  .summary { font-size: 13.5px; max-width: 100%; }
+  /* Stack buttons vertically on very small screens */
+  .actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 22px;
+  }
+  .btnPrimary, .btnGhost {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 20px;
+    font-size: 13px;
+  }
+  .tag { font-size: 10.5px; padding: 4px 10px; }
+}
+
+/* 2xl — iMac 24" / Studio Display 27"+ (min 1920px) */
+@media (min-width: 1920px) {
+  .content {
+    padding: 140px 72px 100px;
+  }
+  .contentLeft {
+    max-width: 48%;
+    padding: 140px 0 100px 80px;
+  }
+  .line { font-size: clamp(72px, 5vw, 96px); }
+  .lineAccent { font-size: clamp(36px, 2.8vw, 52px); }
+  .summary { font-size: 18px; max-width: 600px; }
+  .btnPrimary, .btnGhost { padding: 16px 32px; font-size: 15px; }
+}
