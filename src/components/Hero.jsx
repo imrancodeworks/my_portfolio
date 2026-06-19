@@ -3,14 +3,21 @@ import useReveal from '../hooks/useReveal';
 import styles from './Hero.module.css';
 import ChakraEffects from './ChakraEffects';
 
+// Detect touch/mobile once at module level
+const IS_MOBILE =
+  typeof window !== 'undefined' &&
+  window.matchMedia('(pointer: coarse)').matches;
+
 export default function Hero() {
-  const videoRef   = useRef(null);
-  const loopedRef  = useRef(false);
+  const videoRef  = useRef(null);
+  const loopedRef = useRef(false);
   const [looped, setLooped] = useState(false);
   const [ref, inView] = useReveal(0.1);
 
-  /* ── video logic: play once, then loop last 2 s & slide right ── */
+  /* ── video logic: play once, then loop last 2 s & slide right ──
+     On mobile we skip the video entirely to save CPU + bandwidth.   */
   useEffect(() => {
+    if (IS_MOBILE) return;           // ← no video on mobile
     const video = videoRef.current;
     if (!video) return;
 
@@ -37,6 +44,7 @@ export default function Hero() {
 
   /* ── Reset state when scrolling out of view so it re-animates ── */
   useEffect(() => {
+    if (IS_MOBILE) return;
     if (!inView && looped) {
       setLooped(false);
       loopedRef.current = false;
@@ -50,18 +58,20 @@ export default function Hero() {
   return (
     <section ref={ref} className={`${styles.hero} ${looped ? styles.heroSplit : ''}`} id="about">
 
-      {/* ── background video ── */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        playsInline
-        className={`${styles.bgVideo} ${looped ? styles.bgVideoRight : ''}`}
-      >
-        <source src="/rasingaan2.mp4" type="video/mp4" />
-      </video>
+      {/* ── background video — desktop only ── */}
+      {!IS_MOBILE && (
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          playsInline
+          className={`${styles.bgVideo} ${looped ? styles.bgVideoRight : ''}`}
+        >
+          <source src="/rasingaan2.mp4" type="video/mp4" />
+        </video>
+      )}
 
-      {/* ── chakra particle / lightning layer ── */}
+      {/* ── chakra particle / lightning layer — desktop only (handled inside component) ── */}
       <ChakraEffects />
 
       {/* ── dark overlay so text stays readable ── */}

@@ -40,6 +40,11 @@ export default function Nav() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
+    // Skip entirely on touch/mobile devices
+    const isMobile = window.matchMedia('(pointer: coarse)').matches;
+    if (isMobile) return;
+
     const ctx = canvas.getContext('2d');
 
     const resize = () => {
@@ -59,27 +64,18 @@ export default function Nav() {
         this.life = 1;
         this.decay = Math.random() * 0.04 + 0.02;
         this.color = Math.random() > 0.5
-          ? `rgba(75,184,250,`    // rasengan blue
-          : `rgba(255,106,28,`;   // naruto orange
+          ? `rgba(75,184,250,`
+          : `rgba(255,106,28,`;
       }
       update() {
         this.x    += this.vx;
         this.y    += this.vy;
-        this.vy   += 0.12;        // gentle gravity
+        this.vy   += 0.12;
         this.life -= this.decay;
         this.r    *= 0.97;
       }
       draw() {
         if (this.life <= 0) return;
-        // glow halo
-        const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * 3);
-        g.addColorStop(0, this.color + this.life + ')');
-        g.addColorStop(1, this.color + '0)');
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
-        ctx.fillStyle = g;
-        ctx.fill();
-        // core
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
         ctx.fillStyle = this.color + Math.min(1, this.life * 1.4) + ')';
@@ -89,41 +85,49 @@ export default function Nav() {
 
     const spawnSparks = (x, y, count = 6) => {
       for (let i = 0; i < count; i++) sparksRef.current.push(new Spark(x, y));
+      if (!rafRef.current) startRAF(); // wake up the loop
     };
 
+    // RAF only runs while there are live sparks — idle = zero CPU
     const tick = () => {
+      sparksRef.current = sparksRef.current.filter(s => s.life > 0);
+      if (sparksRef.current.length === 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        rafRef.current = null;
+        return; // stop looping
+      }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      sparksRef.current = sparksRef.current.filter((s) => s.life > 0);
-      sparksRef.current.forEach((s) => { s.update(); s.draw(); });
+      sparksRef.current.forEach(s => { s.update(); s.draw(); });
       rafRef.current = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
 
-    /* mouse move → sparks (listen on window so full nav triggers) */
+    const startRAF = () => {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
+
     const header = canvas.parentElement;
     const onMouse = (e) => {
       const rect = canvas.getBoundingClientRect();
       spawnSparks(e.clientX - rect.left, e.clientY - rect.top, 4);
     };
-    /* touch → sparks */
-    const onTouch = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      Array.from(e.touches).forEach((t) =>
-        spawnSparks(t.clientX - rect.left, t.clientY - rect.top, 6)
-      );
+
+    // Throttled scroll handler — at most once per 100ms
+    let lastScroll = 0;
+    const onScroll = () => {
+      const now = Date.now();
+      if (now - lastScroll < 100) return;
+      lastScroll = now;
+      spawnSparks(canvas.width * 0.75, canvas.height / 2, 3);
     };
-    /* scroll → burst from center-right */
-    const onScroll = () => spawnSparks(canvas.width * 0.75, canvas.height / 2, 5);
 
     header.addEventListener('mousemove', onMouse);
-    header.addEventListener('touchmove', onTouch, { passive: true });
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
       window.removeEventListener('resize', resize);
       header.removeEventListener('mousemove', onMouse);
-      header.removeEventListener('touchmove', onTouch);
       window.removeEventListener('scroll', onScroll);
     };
   }, []);

@@ -137,3 +137,38 @@ img,svg{display:block; max-width:100%;}
 }
 
 /* video & overlay styles are scoped to Hero.module.css */
+
+/* ════════════════════════════════════════════════════════
+   GLOBAL MOBILE PERFORMANCE
+   pointer:coarse = touch device (phones, tablets)
+   These rules cut GPU load by reducing filters & shadows
+   that are expensive on mobile compositing pipelines.
+════════════════════════════════════════════════════════ */
+@media (pointer: coarse) {
+  /* Slow down decorative blob animations — fewer repaints */
+  * {
+    animation-duration: calc(var(--ad, 1) * 1.4) !important;
+  }
+
+  /* Kill drop-shadow filters on beast/fox/octopus images
+     They force per-frame GPU compositing on mobile */
+  img {
+    filter: none !important;
+  }
+
+  /* Remove will-change from everything — let browser decide.
+     Over-promotion wastes GPU memory on low-end phones. */
+  * {
+    will-change: auto !important;
+  }
+
+  /* Reduce box-shadow layers — each layer = extra composite pass */
+  .card, .panel, .log, .box {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important;
+  }
+
+  /* Disable CSS filter on decorative SVG paths */
+  svg {
+    filter: none;
+  }
+}
