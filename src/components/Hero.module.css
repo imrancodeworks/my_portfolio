@@ -139,13 +139,26 @@
 
 .line {
   display: block;
-  font-size: clamp(36px, 6vw, 72px);
+  font-size: clamp(30px, 4.2vw, 54px);
   color: #fff;
   text-shadow: 0 2px 24px rgba(5,5,17,0.8);
-  opacity: 0;
 }
-.inView .line {
-  animation: riseIn 0.75s cubic-bezier(0.16,1,0.3,1) 0.1s forwards;
+
+@media (min-width: 481px) {
+  .line {
+    white-space: nowrap;
+  }
+}
+
+.char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) translateZ(0);
+  will-change: transform, opacity;
+}
+
+.inView .char {
+  animation: riseIn 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .lineAccent {
@@ -370,7 +383,7 @@
     max-width: 48%;
     padding: 140px 0 100px 80px;
   }
-  .line { font-size: clamp(72px, 5vw, 96px); }
+  .line { font-size: clamp(48px, 3.5vw, 72px); }
   .lineAccent { font-size: clamp(36px, 2.8vw, 52px); }
   .summary { font-size: 18px; max-width: 600px; }
   .btnPrimary, .btnGhost { padding: 16px 32px; font-size: 15px; }

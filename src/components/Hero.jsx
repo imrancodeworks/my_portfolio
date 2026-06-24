@@ -100,7 +100,17 @@ export default function Hero() {
         )}
 
         <h1 className={styles.headline}>
-          <span className={styles.line}>Mohamed Imran H</span>
+          <span className={styles.line}>
+            {"Mohamed Imran H".split("").map((char, index) => (
+              <span
+                key={index}
+                className={styles.char}
+                style={{ animationDelay: `${0.1 + index * 0.03}s` }}
+              >
+                {char === " " ? "\u00A0" : char}
+              </span>
+            ))}
+          </span>
           <span className={styles.lineAccent}>trains models. ships products.</span>
         </h1>
 
