@@ -15,6 +15,19 @@ export default function Hero() {
   const [looped, setLooped] = useState(false);
   const [ref, inView] = useReveal(0.1);
   const [isMobile, setIsMobile] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
+
+  /* ── Staggered entrance animation delay to ensure fonts/layout are ready ── */
+  useEffect(() => {
+    if (!inView) {
+      setAnimateIn(false);
+    } else {
+      const timer = setTimeout(() => {
+        setAnimateIn(true);
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [inView]);
 
   /* ── screen width detection for mobile mascot mounting ── */
   useEffect(() => {
@@ -90,7 +103,7 @@ export default function Hero() {
       <div className={`${styles.overlay} ${looped ? styles.overlayLeft : ''}`} />
 
       {/* ── hero content ── */}
-      <div className={`${styles.content} ${looped ? styles.contentLeft : ''} ${inView ? styles.inView : ''}`}>
+      <div className={`${styles.content} ${looped ? styles.contentLeft : ''} ${(inView || animateIn) ? styles.inView : ''}`}>
 
         {/* Mobile Mascot — Centered in the free space above the name */}
         {isMobile && (

@@ -150,6 +150,10 @@
   }
 }
 
+.inView {
+  /* anchor class */
+}
+
 .char {
   display: inline-block;
   opacity: 0;
