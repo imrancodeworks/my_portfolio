@@ -280,6 +280,10 @@
   50%      { opacity: 1;   }
 }
 
+.mobileMascot {
+  display: none;
+}
+
 /* ── Responsive ── */
 
 /* lg — tablets landscape & 11-13" laptops (max 1080px) */
@@ -293,6 +297,18 @@
 
 /* md — mini tablets portrait / hamburger breakpoint (max 900px) */
 @media (max-width: 900px) {
+  .hero {
+    height: auto !important;
+    min-height: 100vh;
+    min-height: 100svh;
+    overflow: visible;
+  }
+  .mobileMascot {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+    width: 100%;
+  }
   .bgVideoRight {
     left: 0;
     width: 100%;

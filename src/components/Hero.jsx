@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useReveal from '../hooks/useReveal';
 import styles from './Hero.module.css';
 import ChakraEffects from './ChakraEffects';
+import Mascot from './Mascot';
 
 // Detect touch/mobile once at module level
 const IS_MOBILE =
@@ -46,12 +47,14 @@ export default function Hero() {
   useEffect(() => {
     if (IS_MOBILE) return;
     if (!inView && looped) {
-      setLooped(false);
-      loopedRef.current = false;
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.playbackRate = 0.75;
-      }
+      setTimeout(() => {
+        setLooped(false);
+        loopedRef.current = false;
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.playbackRate = 0.75;
+        }
+      }, 0);
     }
   }, [inView, looped]);
 
@@ -79,6 +82,11 @@ export default function Hero() {
 
       {/* ── hero content ── */}
       <div className={`${styles.content} ${looped ? styles.contentLeft : ''} ${inView ? styles.inView : ''}`}>
+
+        {/* Mobile Mascot — Centered in the free space above the name */}
+        <div className={styles.mobileMascot}>
+          <Mascot />
+        </div>
 
         <h1 className={styles.headline}>
           <span className={styles.line}>Mohamed Imran H</span>

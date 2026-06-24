@@ -62,8 +62,8 @@ export default function Education() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-          // Text fades in 2s after beast starts dropping
-          setTimeout(() => setTextVisible(true), 2000);
+          // Text fades in 0.8s after beast starts dropping
+          setTimeout(() => setTextVisible(true), 800);
         } else if (entry.boundingClientRect.top > 0) {
           setVisible(false);
           setTextVisible(false);

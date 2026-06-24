@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import useTilt from '../hooks/useTilt';
 import styles from './Skills.module.css';
 
 const STACK = [
@@ -7,6 +8,46 @@ const STACK = [
   { cat: 'Web Development',   level: 85, items: ['React','Node.js','Express.js','Flask','Bootstrap','jQuery'] },
   { cat: 'Databases & Tools', level: 80, items: ['MongoDB','NoSQL','SQL','Git','GitHub','VS Code'] },
 ];
+
+function SkillCard({ s, i, visible }) {
+  const { ref, onMouseMove, onMouseLeave, onTouchStart, onTouchMove, onTouchEnd } = useTilt(12);
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      className={`${styles.card} ${visible ? styles.cardIn : ''}`}
+      style={{ transitionDelay: visible ? `${0.4 + i * 0.1}s` : '0s', position: 'relative' }}
+    >
+      {/* Specular shine overlay */}
+      <div data-shine className={styles.shine} />
+      {/* Shimmer sweep on card-in */}
+      {visible && <div className={styles.shimmer} />}
+
+      <div className={styles.cardTop}>
+        <span className={styles.cat}>{s.cat}</span>
+        <span className={styles.level}>{s.level}%</span>
+      </div>
+      <div className={styles.bar}>
+        <div
+          className={styles.barFill}
+          style={{
+            '--level': `${s.level}%`,
+            transitionDelay: visible ? `${0.7 + i * 0.1}s` : '0s',
+          }}
+        />
+      </div>
+      <div className={styles.tags}>
+        {s.items.map((it) => (
+          <span key={it} className={styles.tag}>{it}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Skills() {
   const sectionRef = useRef(null);
@@ -74,30 +115,7 @@ export default function Skills() {
 
         <div className={styles.grid}>
           {STACK.map((s, i) => (
-            <div
-              className={`${styles.card} ${visible ? styles.cardIn : ''}`}
-              key={s.cat}
-              style={{ transitionDelay: visible ? `${0.4 + i * 0.1}s` : '0s' }}
-            >
-              <div className={styles.cardTop}>
-                <span className={styles.cat}>{s.cat}</span>
-                <span className={styles.level}>{s.level}%</span>
-              </div>
-              <div className={styles.bar}>
-                <div
-                  className={styles.barFill}
-                  style={{
-                    '--level': `${s.level}%`,
-                    transitionDelay: visible ? `${0.7 + i * 0.1}s` : '0s',
-                  }}
-                />
-              </div>
-              <div className={styles.tags}>
-                {s.items.map((it) => (
-                  <span key={it} className={styles.tag}>{it}</span>
-                ))}
-              </div>
-            </div>
+            <SkillCard key={s.cat} s={s} i={i} visible={visible} />
           ))}
         </div>
       </div>

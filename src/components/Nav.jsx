@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from './Nav.module.css';
+import Mascot from './Mascot';
 
 const LINKS = [
   { id: 'about',      label: 'ABOUT'      },
@@ -138,10 +139,15 @@ export default function Nav() {
       <canvas ref={canvasRef} className={styles.sparkCanvas} aria-hidden="true" />
 
       <div className={styles.inner}>
-        {/* LOGO — "MOHAMED IMRAN" in blue, Carter One */}
-        <a href="#about" className={styles.logo}>
-          MOHAMED IMRAN
-        </a>
+        {/* LOGO & MASCOT WRAPPER */}
+        <div className={styles.logoWrapper}>
+          <a href="#about" className={styles.logo} aria-label="Mohamed Imran — Home">
+            <img src="/Logo.png" alt="Mohamed Imran Logo" className={styles.logoImg} />
+          </a>
+          <div className={styles.navMascotWrapper}>
+            <Mascot isNav={true} />
+          </div>
+        </div>
 
         {/* NAV LINKS */}
         <nav className={`${styles.links} ${open ? styles.open : ''}`}>

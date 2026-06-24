@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import useCountUp from '../hooks/useCountUp';
+import useTilt from '../hooks/useTilt';
 import styles from './Experience.module.css';
 
 const LOG_LINES = [
@@ -29,6 +30,7 @@ export default function Experience() {
   const canvasRef  = useRef(null);
   const rafRef     = useRef(null);
   const [visible, setVisible] = useState(false);
+  const { ref: tiltRef, onMouseMove, onMouseLeave, onTouchStart, onTouchMove, onTouchEnd } = useTilt(10);
 
   /* IntersectionObserver — threshold 0 works with scroll-snap */
   useEffect(() => {
@@ -218,7 +220,18 @@ export default function Experience() {
           </h2>
         </div>
 
-        <div className={styles.log}>
+        <div
+          ref={tiltRef}
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          className={styles.log}
+        >
+          {/* Specular shine overlay */}
+          <div data-shine className={styles.shine} />
+
           <div className={styles.logHead}>
             <div>
               <h3 className={styles.role}>AI &amp; Machine Learning Intern</h3>

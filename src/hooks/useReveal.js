@@ -23,6 +23,10 @@ export default function useReveal(threshold = 0.15) {
     const onNavClick = (e) => {
       if (e.detail === el.id) {
         setInView(false);
+        // Re-trigger after a frame so animations replay even if the
+        // section is already in the viewport (IntersectionObserver
+        // won't fire again in that case).
+        setTimeout(() => setInView(true), 80);
       }
     };
     window.addEventListener('nav-click', onNavClick);

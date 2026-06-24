@@ -3,7 +3,7 @@ import styles from './Epoch.module.css';
 
 // Each major section is framed as a step in a training run — this is the
 // thread that ties the whole page back to the neural-network signature.
-export default function Epoch({ id, index, total, command, title, children, wide, hideEpoch }) {
+export default function Epoch({ id, index, total, title, children, wide, hideEpoch }) {
   const [ref, inView] = useReveal(0.1);
 
   return (

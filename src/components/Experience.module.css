@@ -15,7 +15,7 @@
   overflow: hidden;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background: #CBBD93;
+  background: #E6BE8A;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -26,8 +26,10 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 120% 70% at 50% 110%, rgba(139,100,30,0.55) 0%, transparent 60%),
-    linear-gradient(170deg, #d4c69e 0%, #cbbd93 40%, #bfac7c 70%, #c4b485 100%);
+    radial-gradient(ellipse 120% 70% at 50% 110%, rgba(160,110,30,0.55) 0%, transparent 60%),
+    linear-gradient(170deg, #e6be8a 0%, #d4aa72 40%, #c9994f 70%, #d4aa72 100%);
+  transform: translate(calc(var(--mx) * -16px), calc(var(--my) * -16px)) scale(1.05);
+  will-change: transform;
 }
 
 .bgDune1 {
@@ -235,16 +237,29 @@
 
 /* ── Experience card ── */
 .log {
-  background: rgba(255, 248, 225, 0.62);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(160,120,40,0.35);
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 12px 48px rgba(100,70,10,0.18);
+  background: #E6BE8A;
+  border: none;
+  border-radius: 20px;
+  box-shadow:
+    -8px -8px 24px rgba(255, 255, 255, 0.55),
+    8px 8px 24px rgba(120, 85, 30, 0.38);
   width: calc(100% + 38px);
   margin-left: 40px;
   padding-bottom: 16px; /* adds height */
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Specular shine overlay */
+.shine {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s;
+  z-index: 10;
 }
 
 .logHead {
@@ -256,6 +271,9 @@
   flex-wrap: wrap;
   gap: 8px;
   background: rgba(200,170,80,0.12);
+  border-radius: 18px 18px 0 0;
+  transform: translateZ(28px);
+  transform-style: preserve-3d;
 }
 
 .role {
@@ -289,6 +307,8 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   border-bottom: 1px solid rgba(160,120,40,0.2);
+  transform: translateZ(40px);
+  transform-style: preserve-3d;
 }
 
 .metric {
@@ -321,12 +341,13 @@
   flex-direction: column;
   gap: 12px;
   list-style: none;
+  transform: translateZ(24px);
 }
 
 .line {
   display: flex;
   gap: 10px;
-  font-family: 'Inter', system-ui;
+  font-family: var(--peralta);
   font-size: 14.5px;
   font-weight: 400;
   color: rgba(60,35,5,0.85);

@@ -20,7 +20,10 @@
   --radius-lg: 22px;
   --mono: 'JetBrains Mono', monospace;
   --display: 'Carter One', system-ui;
-  --sans: 'Protest Guerrilla', sans-serif;
+  --sans: 'Story Script', sans-serif;
+  --btn-font: 'Henny Penny', system-ui;
+  --peralta: 'Peralta', serif;
+  --cinzel: 'Cinzel Decorative', serif;
   --maxw: 1140px;
 
   /* ── Responsive breakpoints ──
@@ -84,7 +87,7 @@ main > section {
 #root{position:relative; isolation:isolate;}
 
 a{color:inherit; text-decoration:none;}
-button{font-family:inherit; cursor:pointer;}
+button{font-family:var(--btn-font); cursor:pointer;}
 ul{list-style:none;}
 img,svg{display:block; max-width:100%;}
 
@@ -120,6 +123,50 @@ img,svg{display:block; max-width:100%;}
   100% { box-shadow: 0 0 10px rgba(var(--mc-accent), 0.2); }
 }
 
+
+/* ── 3D Entrance — elements rise from depth ── */
+@keyframes depth3dIn {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) rotateX(22deg) translateZ(-70px) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(1000px) rotateX(0deg) translateZ(0px) translateY(0);
+  }
+}
+
+/* ── 3D Float — hovers with Z-axis depth ── */
+@keyframes float3d {
+  0%,100% { transform: perspective(700px) translateZ(0px)  translateY(0px)  rotateX(0deg); }
+  35%     { transform: perspective(700px) translateZ(26px)  translateY(-9px) rotateX(3.5deg); }
+  70%     { transform: perspective(700px) translateZ(14px)  translateY(-16px) rotateX(-2deg); }
+}
+
+/* ── 3D Shimmer sweep ── */
+@keyframes shimmer3d {
+  0%   { transform: translateX(-130%) skewX(-22deg); }
+  100% { transform: translateX(230%)  skewX(-22deg); }
+}
+
+/* ── 3D Scale pop on entrance ── */
+@keyframes pop3d {
+  0%   { opacity:0; transform: perspective(600px) scale(0.7) rotateX(18deg); }
+  70%  { transform: perspective(600px) scale(1.06) rotateX(-3deg); }
+  100% { opacity:1; transform: perspective(600px) scale(1)   rotateX(0deg); }
+}
+
+/* Global shine overlay — used by all tilt cards */
+.cardShine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 10;
+}
+
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
 }
@@ -130,9 +177,39 @@ img,svg{display:block; max-width:100%;}
   font-style: normal;
 }
 
-.protest-guerrilla-regular {
-  font-family: "Protest Guerrilla", sans-serif;
+.peralta-regular {
+  font-family: "Peralta", serif;
   font-weight: 400;
+  font-style: normal;
+}
+
+.henny-penny-regular {
+  font-family: "Henny Penny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.story-script-regular {
+  font-family: "Story Script", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cinzel-decorative-regular {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.cinzel-decorative-bold {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.cinzel-decorative-black {
+  font-family: "Cinzel Decorative", serif;
+  font-weight: 900;
   font-style: normal;
 }
 
