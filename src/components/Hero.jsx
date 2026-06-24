@@ -14,6 +14,15 @@ export default function Hero() {
   const loopedRef = useRef(false);
   const [looped, setLooped] = useState(false);
   const [ref, inView] = useReveal(0.1);
+  const [isMobile, setIsMobile] = useState(false);
+
+  /* ── screen width detection for mobile mascot mounting ── */
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 900);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   /* ── video logic: play once, then loop last 2 s & slide right ──
      On mobile we skip the video entirely to save CPU + bandwidth.   */
@@ -84,9 +93,11 @@ export default function Hero() {
       <div className={`${styles.content} ${looped ? styles.contentLeft : ''} ${inView ? styles.inView : ''}`}>
 
         {/* Mobile Mascot — Centered in the free space above the name */}
-        <div className={styles.mobileMascot}>
-          <Mascot />
-        </div>
+        {isMobile && (
+          <div className={styles.mobileMascot}>
+            <Mascot />
+          </div>
+        )}
 
         <h1 className={styles.headline}>
           <span className={styles.line}>Mohamed Imran H</span>

@@ -15,9 +15,18 @@ export default function Nav() {
   const [open, setOpen]       = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive]   = useState('about');
+  const [isDesktop, setIsDesktop] = useState(true);
   const canvasRef              = useRef(null);
   const rafRef                 = useRef(null);
   const sparksRef              = useRef([]);
+
+  /* ── screen width detection for mascot unmounting ── */
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth > 900);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   /* ── scroll detection ── */
   useEffect(() => {
@@ -144,9 +153,11 @@ export default function Nav() {
           <a href="#about" className={styles.logo} aria-label="Mohamed Imran — Home">
             <img src="/Logo.png" alt="Mohamed Imran Logo" className={styles.logoImg} />
           </a>
-          <div className={styles.navMascotWrapper}>
-            <Mascot isNav={true} />
-          </div>
+          {isDesktop && (
+            <div className={styles.navMascotWrapper}>
+              <Mascot isNav={true} />
+            </div>
+          )}
         </div>
 
         {/* NAV LINKS */}
