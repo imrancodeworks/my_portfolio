@@ -2,15 +2,17 @@ import { useEffect, useRef } from 'react';
 
 // A faint trailing dot, like a gradient-descent step marker following the
 // cursor. Desktop-only, opt-out on reduced motion, never blocks input.
+
+const isTouch   = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
+const isReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 export default function CursorTrail() {
   const dotRef = useRef(null);
-  const pos = useRef({ x: -100, y: -100 });
+  const pos    = useRef({ x: -100, y: -100 });
   const target = useRef({ x: -100, y: -100 });
 
   useEffect(() => {
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isTouch = window.matchMedia('(pointer: coarse)').matches;
-    if (reduced || isTouch) return;
+    if (isReduced || isTouch) return;
 
     const onMove = (e) => {
       target.current = { x: e.clientX, y: e.clientY };
@@ -33,6 +35,9 @@ export default function CursorTrail() {
       cancelAnimationFrame(raf);
     };
   }, []);
+
+  // Don't mount DOM element at all on touch/reduced-motion devices
+  if (isTouch || isReduced) return null;
 
   return (
     <div

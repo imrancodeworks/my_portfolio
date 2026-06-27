@@ -1,6 +1,7 @@
 .section{
   position:relative;
   height: 100vh;
+  height: 100svh; /* iOS Safari safe viewport — prevents clip with address bar */
   min-height: 600px;
   display: flex;
   align-items: center;
@@ -8,6 +9,7 @@
   border-top:1px solid var(--line-soft);
   scroll-snap-align: start;
   scroll-snap-stop: always;
+  background: linear-gradient(135deg, #050511 0%, #080816 50%, #150600 100%);
 }
 
 .inner{

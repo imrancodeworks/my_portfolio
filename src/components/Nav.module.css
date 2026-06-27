@@ -10,15 +10,15 @@
   position: sticky;
   top: 0;
   z-index: 200;
-  background: #FF6A1C;
+  background-color: var(--nav-bg, #FF6A1C);
   border-bottom: 2px solid rgba(255, 255, 255, 0.15);
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1);
   overflow: hidden;          /* keeps sparks clipped inside bar */
 }
 
 .nav.scrolled {
-  background: #e55c12;
-  box-shadow: 0 4px 32px rgba(255, 106, 28, 0.45);
+  background-color: var(--nav-bg, #e55c12);
+  box-shadow: 0 4px 32px var(--nav-shadow, rgba(255, 106, 28, 0.45));
 }
 
 /* ── spark canvas sits behind content, covers full nav ── */
@@ -86,8 +86,10 @@
 }
 
 .logoImg {
-  height: 68px;
-  width: 68px;
+  height: 82px;
+  width: 82px;
+  margin-top: -7px;
+  margin-bottom: -7px;
   object-fit: contain;
   border-radius: 50%;
   transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s;
@@ -119,12 +121,12 @@
   font-family: "Protest Guerrilla", sans-serif;
   font-size: clamp(11px, 1.1vw, 14px);
   font-weight: 400;
-  color: #4BB8FA;
+  color: var(--nav-text, #4BB8FA);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   position: relative;
   padding: 4px 0;
-  transition: color 0.2s, text-shadow 0.2s;
+  transition: color 0.8s cubic-bezier(0.25, 1, 0.5, 1), text-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .links a::after {
@@ -132,16 +134,16 @@
   position: absolute;
   left: 0; right: 0; bottom: -3px;
   height: 2px;
-  background: #fff;
+  background: var(--nav-underline, #fff);
   border-radius: 2px;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .links a:hover {
-  color: #fff;
-  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+  color: var(--nav-text-active, #fff);
+  text-shadow: 0 0 10px var(--nav-text-active, rgba(255,255,255,0.6));
 }
 
 .links a:hover::after {
@@ -149,14 +151,14 @@
 }
 
 .links a.active {
-  color: #fff;
-  text-shadow: 0 0 14px rgba(255,255,255,0.8);
+  color: var(--nav-text-active, #fff);
+  text-shadow: 0 0 14px var(--nav-text-active, rgba(255,255,255,0.8));
   font-weight: 400;
 }
 
 .links a.active::after {
   transform: scaleX(1);
-  background: #fff;
+  background: var(--nav-underline, #fff);
 }
 
 /* ── mobile hamburger ── */
@@ -174,10 +176,10 @@
 .toggle span {
   width: 22px;
   height: 2px;
-  background: #fff;
+  background: var(--nav-text-active, #fff);
   display: block;
   border-radius: 2px;
-  transition: transform 0.25s, opacity 0.25s;
+  transition: transform 0.25s, opacity 0.25s, background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .barOpen1 { transform: translateY(7px) rotate(45deg); }
@@ -195,11 +197,11 @@
     left: 0; right: 0;
     flex-direction: column;
     gap: 0;
-    background: #FF6A1C;
+    background-color: var(--nav-bg, #FF6A1C);
     border-bottom: 2px solid rgba(255,255,255,0.15);
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease;
+    transition: max-height 0.35s ease, background-color 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     z-index: 150;
   }
   .links.open { max-height: 480px; }
@@ -214,6 +216,11 @@
 /* Extra-compact phones — tighter logo + smaller links */
 @media (max-width: 480px) {
   .inner { padding: 10px 14px; gap: 12px; }
-  .logoImg { height: 58px; width: 58px; }
+  .logoImg {
+    height: 72px;
+    width: 72px;
+    margin-top: -7px;
+    margin-bottom: -7px;
+  }
   .links a { padding: 14px 18px; font-size: 14px; }
 }

@@ -19,14 +19,16 @@ export default function Hero() {
 
   /* ── Staggered entrance animation delay to ensure fonts/layout are ready ── */
   useEffect(() => {
+    let timer;
     if (!inView) {
-      setAnimateIn(false);
+      // Set false inside a microtask or deferred call to avoid synchronous cascade warnings
+      timer = setTimeout(() => setAnimateIn(false), 0);
     } else {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setAnimateIn(true);
       }, 150);
-      return () => clearTimeout(timer);
     }
+    return () => clearTimeout(timer);
   }, [inView]);
 
   /* ── screen width detection for mobile mascot mounting ── */
@@ -65,11 +67,13 @@ export default function Hero() {
     return () => video.removeEventListener('timeupdate', onTime);
   }, []);
 
+  const resetTimerRef = useRef(null);
+
   /* ── Reset state when scrolling out of view so it re-animates ── */
   useEffect(() => {
     if (IS_MOBILE) return;
     if (!inView && looped) {
-      setTimeout(() => {
+      resetTimerRef.current = setTimeout(() => {
         setLooped(false);
         loopedRef.current = false;
         if (videoRef.current) {
@@ -78,6 +82,7 @@ export default function Hero() {
         }
       }, 0);
     }
+    return () => { if (resetTimerRef.current) clearTimeout(resetTimerRef.current); };
   }, [inView, looped]);
 
   return (
@@ -102,10 +107,20 @@ export default function Hero() {
       {/* ── dark overlay so text stays readable ── */}
       <div className={`${styles.overlay} ${looped ? styles.overlayLeft : ''}`} />
 
+      {/* ── faded background logo watermark — hover to unlock Shadow Seeker quest ── */}
+      <div
+        className={`${styles.logoWatermarkContainer} ${looped ? styles.logoWatermarkVisible : ''}`}
+        onMouseEnter={() => window.dispatchEvent(new Event('quest:found_watermark'))}
+        style={{ cursor: 'pointer' }}
+        title="👁️ You found something hidden..."
+      >
+        <img src="/Logo.png" alt="" className={styles.bgLogoWatermark} aria-hidden="true" />
+      </div>
+
       {/* ── hero content ── */}
       <div className={`${styles.content} ${looped ? styles.contentLeft : ''} ${(inView || animateIn) ? styles.inView : ''}`}>
 
-        {/* Mobile Mascot — Centered in the free space above the name */}
+        {/* Mascot with skin picker — mobile only */}
         {isMobile && (
           <div className={styles.mobileMascot}>
             <Mascot />
@@ -146,7 +161,6 @@ export default function Hero() {
               <path d="M3 7H11M11 7L7.5 3.5M11 7L7.5 10.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </a>
-          <a href="#contact" className={styles.btnGhost}>Get in touch</a>
         </div>
       </div>
 

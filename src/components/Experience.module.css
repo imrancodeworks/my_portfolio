@@ -15,7 +15,7 @@
   overflow: hidden;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background: #E6BE8A;
+  background: #36454F;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -26,8 +26,8 @@
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 120% 70% at 50% 110%, rgba(160,110,30,0.55) 0%, transparent 60%),
-    linear-gradient(170deg, #e6be8a 0%, #d4aa72 40%, #c9994f 70%, #d4aa72 100%);
+    radial-gradient(ellipse 120% 70% at 50% 110%, rgba(84, 110, 122, 0.4) 0%, transparent 60%),
+    linear-gradient(170deg, #36454F 0%, #252F36 40%, #151B20 70%, #252F36 100%);
   transform: translate(calc(var(--mx) * -16px), calc(var(--my) * -16px)) scale(1.05);
   will-change: transform;
 }
@@ -224,8 +224,8 @@
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #2c1a00;
-  text-shadow: 0 2px 16px rgba(100,70,10,0.2);
+  color: #fff;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
 }
 .titleAccent {
   background: linear-gradient(90deg, #8b5e10 0%, #c4880a 60%, #6b4408 100%);
@@ -471,4 +471,9 @@
     -webkit-backdrop-filter: none;
     background: rgba(255, 248, 225, 0.92);
   }
+
+  /* Reduce dune blob blur: 60-70px → 40px — sand effect stays, GPU relaxes */
+  .bgDune1 { filter: blur(40px); }
+  .bgDune2 { filter: blur(42px); }
+  .bgDune3 { filter: blur(50px); }
 }

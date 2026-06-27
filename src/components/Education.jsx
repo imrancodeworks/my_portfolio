@@ -57,22 +57,37 @@ export default function Education() {
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
+    let textTimer = null;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
           // Text fades in 0.8s after beast starts dropping
-          setTimeout(() => setTextVisible(true), 800);
+          textTimer = setTimeout(() => setTextVisible(true), 800);
         } else if (entry.boundingClientRect.top > 0) {
           setVisible(false);
           setTextVisible(false);
+          if (textTimer) { clearTimeout(textTimer); textTimer = null; }
         }
       },
       { threshold: 0 }
     );
     observer.observe(node);
-    return () => observer.disconnect();
+    const onNavClick = (e) => {
+      if (e.detail === 'education') {
+        setVisible(false);
+        setTextVisible(false);
+        if (textTimer) { clearTimeout(textTimer); textTimer = null; }
+      }
+    };
+    window.addEventListener('nav-click', onNavClick);
+
+    return () => {
+      observer.disconnect();
+      if (textTimer) clearTimeout(textTimer);
+      window.removeEventListener('nav-click', onNavClick);
+    };
   }, []);
 
   return (

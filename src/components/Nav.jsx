@@ -19,6 +19,15 @@ export default function Nav() {
   const canvasRef              = useRef(null);
   const rafRef                 = useRef(null);
   const sparksRef              = useRef([]);
+  const isNavClickingRef       = useRef(false);
+  const clickTimeoutRef        = useRef(null);
+  const visibleHeightsRef      = useRef({});
+  const activeRef              = useRef(active);
+
+  // Keep activeRef in sync
+  useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   /* ── screen width detection for mascot unmounting ── */
   useEffect(() => {
@@ -39,11 +48,37 @@ export default function Nav() {
   useEffect(() => {
     const sections = LINKS.map((l) => document.getElementById(l.id)).filter(Boolean);
     const obs = new IntersectionObserver(
-      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }),
-      { rootMargin: '-40% 0px -50% 0px' }
+      (entries) => {
+        if (isNavClickingRef.current) return;
+        
+        entries.forEach((e) => {
+          visibleHeightsRef.current[e.target.id] = e.isIntersecting ? e.intersectionRect.height : 0;
+        });
+
+        let maxVisibleHeight = 0;
+        let mostVisibleSection = null;
+
+        for (const id in visibleHeightsRef.current) {
+          const height = visibleHeightsRef.current[id];
+          if (height > maxVisibleHeight) {
+            maxVisibleHeight = height;
+            mostVisibleSection = id;
+          }
+        }
+
+        if (mostVisibleSection && mostVisibleSection !== activeRef.current) {
+          setActive(mostVisibleSection);
+        }
+      },
+      {
+        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+      }
     );
     sections.forEach((s) => obs.observe(s));
-    return () => obs.disconnect();
+    return () => {
+      obs.disconnect();
+      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    };
   }, []);
 
   /* ── chakra spark canvas ── */
@@ -142,8 +177,75 @@ export default function Nav() {
     };
   }, []);
 
+  const getNavTheme = () => {
+    switch (active) {
+      case 'projects':
+        return {
+          bg: '#8A9A5B',
+          shadow: 'rgba(138, 154, 91, 0.35)',
+          text: '#E2E9D8',
+          activeText: '#ffffff',
+          underline: '#ffffff',
+        };
+      case 'stack':
+        return {
+          bg: '#000000',
+          shadow: 'rgba(0, 0, 0, 0.5)',
+          text: '#4BB8FA',
+          activeText: '#ffffff',
+          underline: '#ffffff',
+        };
+      case 'experience':
+        return {
+          bg: '#36454F',
+          shadow: 'rgba(54, 69, 79, 0.4)',
+          text: '#4BB8FA',
+          activeText: '#ffffff',
+          underline: '#ffffff',
+        };
+      case 'education':
+        return {
+          bg: '#FFDB58',
+          shadow: 'rgba(255, 219, 88, 0.4)',
+          text: '#4D3D00',
+          activeText: '#000000',
+          underline: '#000000',
+        };
+      default:
+        return {
+          bg: scrolled ? '#e55c12' : '#FF6A1C',
+          shadow: 'rgba(255, 106, 28, 0.45)',
+          text: '#4BB8FA',
+          activeText: '#ffffff',
+          underline: '#ffffff',
+        };
+    }
+  };
+
+  const handleNavLinkClick = (id) => {
+    setOpen(false);
+    setActive(id);
+    isNavClickingRef.current = true;
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      isNavClickingRef.current = false;
+    }, 1000);
+    window.dispatchEvent(new CustomEvent('nav-click', { detail: id }));
+  };
+
+  const theme = getNavTheme();
+
   return (
-    <header className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
+    <header
+      className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}
+      style={{
+        '--nav-bg': theme.bg,
+        '--nav-shadow': theme.shadow,
+        '--nav-text': theme.text,
+        '--nav-text-active': theme.activeText,
+        '--nav-underline': theme.underline,
+      }}
+    >
       {/* chakra spark canvas covers the whole nav bar */}
       <canvas ref={canvasRef} className={styles.sparkCanvas} aria-hidden="true" />
 
@@ -167,10 +269,8 @@ export default function Nav() {
               key={l.id}
               href={`#${l.id}`}
               className={active === l.id ? styles.active : ''}
-              onClick={() => {
-                setOpen(false);
-                window.dispatchEvent(new CustomEvent('nav-click', { detail: l.id }));
-              }}
+              aria-current={active === l.id ? 'true' : undefined}
+              onClick={() => handleNavLinkClick(l.id)}
             >
               {l.label}
             </a>

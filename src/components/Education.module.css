@@ -12,7 +12,7 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  background-color: #2F2FE4;
+  background-color: #FFDB58;
 }
 
 /* ═══════════════════════════════════════
@@ -24,11 +24,12 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  background: linear-gradient(135deg, #2D2200 0%, #151000 50%, #0A0800 100%);
   transform: translate(calc(var(--mx) * -16px), calc(var(--my) * -16px)) scale(1.05);
   will-change: transform;
 }
 
-/* Glowing orbs — deep blues & purples */
+/* Glowing orbs — deep gold & ambers */
 .orb1, .orb2, .orb3 {
   position: absolute;
   border-radius: 50%;
@@ -36,19 +37,19 @@
 }
 .orb1 {
   width: 700px; height: 600px;
-  background: rgba(80, 80, 255, 0.45);
+  background: rgba(255, 219, 88, 0.3);
   top: -20%; left: -15%;
   animation: orbFloat1 14s ease-in-out infinite alternate;
 }
 .orb2 {
   width: 550px; height: 500px;
-  background: rgba(120, 0, 255, 0.35);
+  background: rgba(204, 150, 0, 0.25);
   bottom: -15%; right: 30%;
   animation: orbFloat2 11s ease-in-out infinite alternate;
 }
 .orb3 {
   width: 400px; height: 400px;
-  background: rgba(0, 200, 255, 0.2);
+  background: rgba(255, 240, 150, 0.15);
   top: 20%; right: -10%;
   animation: orbFloat3 9s ease-in-out infinite alternate;
 }
@@ -61,7 +62,7 @@
   position: absolute;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to top, transparent, rgba(150, 200, 255, 0.9), transparent);
+  background: linear-gradient(to top, transparent, rgba(255, 219, 88, 0.9), transparent);
   border-radius: 2px;
   animation: sparkFlash linear infinite;
   opacity: 0;
@@ -110,17 +111,17 @@
 }
 .wave1 {
   top: 25%;
-  background: linear-gradient(90deg, transparent, rgba(120,180,255,0.5), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 219, 88, 0.4), transparent);
   animation: waveSweep 8s ease-in-out infinite;
 }
 .wave2 {
   top: 55%;
-  background: linear-gradient(90deg, transparent, rgba(180,100,255,0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(204, 150, 0, 0.3), transparent);
   animation: waveSweep 11s ease-in-out infinite reverse;
 }
 .wave3 {
   top: 78%;
-  background: linear-gradient(90deg, transparent, rgba(80,220,255,0.35), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 240, 150, 0.25), transparent);
   animation: waveSweep 7s ease-in-out infinite 2s;
 }
 @keyframes waveSweep {
@@ -281,15 +282,19 @@
   box-shadow: 0 0 0 4px rgba(120, 200, 255, 0.25), 0 0 12px rgba(120, 200, 255, 0.6);
   transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
-.item:hover {
-  background: rgba(255, 255, 255, 0.04);
-  transform: translateZ(15px) translateX(6px);
-  border-left-color: rgba(120, 200, 255, 1);
-}
-.item:hover::before {
-  transform: scale(1.3);
-  background: #fff;
-  box-shadow: 0 0 0 6px rgba(120, 200, 255, 0.4), 0 0 20px rgba(120, 200, 255, 0.95);
+/* Only trigger the 3D hover lift on devices with a real pointer/mouse.
+   On touch screens tapping leaves :hover stuck, causing permanent shift. */
+@media (hover: hover) {
+  .item:hover {
+    background: rgba(255, 255, 255, 0.04);
+    transform: translateZ(15px) translateX(6px);
+    border-left-color: rgba(120, 200, 255, 1);
+  }
+  .item:hover::before {
+    transform: scale(1.3);
+    background: #fff;
+    box-shadow: 0 0 0 6px rgba(120, 200, 255, 0.4), 0 0 20px rgba(120, 200, 255, 0.95);
+  }
 }
 .item h4 {
   font-family: var(--display);
@@ -300,24 +305,22 @@
 }
 .school {
   display: block;
-  font-family: var(--cinzel);
-  font-weight: 900;
-  font-variant-ligatures: none !important;
-  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0, "hlig" 0, "calt" 0 !important;
-  letter-spacing: 0.08em !important;
+  font-family: var(--odibee);
+  font-weight: 400;
+  font-style: normal;
   color: rgba(200, 220, 255, 0.85);
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 8px;
+  letter-spacing: 0.04em;
 }
 .year {
   display: block;
-  font-family: var(--cinzel);
-  font-weight: 900;
-  font-variant-ligatures: none !important;
-  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0, "hlig" 0, "calt" 0 !important;
-  letter-spacing: 0.08em !important;
-  font-size: 14px;
+  font-family: var(--odibee);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 17px;
   color: rgba(170, 200, 255, 0.75);
+  letter-spacing: 0.04em;
 }
 
 .panel {
@@ -350,16 +353,15 @@
   gap: 14px;
 }
 .panel li {
-  font-family: var(--cinzel);
-  font-weight: 900;
-  font-variant-ligatures: none !important;
-  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0, "hlig" 0, "calt" 0 !important;
-  letter-spacing: 0.06em !important;
-  font-size: 16px;
+  font-family: var(--odibee);
+  font-weight: 400;
+  font-style: normal;
+  font-size: 19px;
   color: rgba(210, 225, 255, 0.9);
   display: flex;
   gap: 10px;
-  line-height: 1.6;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
 }
 .panel li::before {
   content: '›';
@@ -400,9 +402,9 @@
   .content { padding: 0 16px; }
   .title { font-size: clamp(26px, 7vw, 38px); margin-bottom: 24px; }
   .item h4 { font-size: 17px; }
-  .school { font-size: 14px; }
-  .year { font-size: 12px; }
-  .panel li { font-size: 14px; }
+  .school { font-size: 17px; }
+  .year { font-size: 15px; }
+  .panel li { font-size: 17px; }
 }
 
 /* xs — compact phones (max 480px) */
@@ -412,9 +414,9 @@
   .content { padding: 0 12px; }
   .title { font-size: 24px; margin-bottom: 20px; }
   .item h4 { font-size: 16px; }
-  .school { font-size: 13px; }
+  .school { font-size: 15px; }
   .panel h4 { font-size: 12px; }
-  .panel li { font-size: 13px; }
+  .panel li { font-size: 15px; }
   .cols { gap: 24px; }
 }
 
@@ -425,9 +427,9 @@
   .title { font-size: clamp(52px, 4vw, 68px); }
   .cols { max-width: 65%; gap: 32px; }
   .item h4 { font-size: 24px; }
-  .school { font-size: 18px; }
-  .year { font-size: 15px; }
-  .panel li { font-size: 18px; }
+  .school { font-size: 22px; }
+  .year { font-size: 19px; }
+  .panel li { font-size: 22px; }
 }
 
 /* ── Disable expensive backdrop-filter on mobile ── */
@@ -437,4 +439,7 @@
     -webkit-backdrop-filter: none;
     background: rgba(255, 255, 255, 0.12);
   }
+
+  /* Reduce orb blur: 90px → 55px — lightning orbs still glow, paint is lighter */
+  .orb1, .orb2, .orb3 { filter: blur(55px); }
 }

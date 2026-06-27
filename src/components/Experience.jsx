@@ -29,6 +29,7 @@ export default function Experience() {
   const sectionRef = useRef(null);
   const canvasRef  = useRef(null);
   const rafRef     = useRef(null);
+  const visibleRef = useRef(false); // ref so canvas RAF reads latest value without re-mounting
   const [visible, setVisible] = useState(false);
   const { ref: tiltRef, onMouseMove, onMouseLeave, onTouchStart, onTouchMove, onTouchEnd } = useTilt(10);
 
@@ -39,8 +40,10 @@ export default function Experience() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          visibleRef.current = true;
           setVisible(true);
         } else if (entry.boundingClientRect.top > 0) {
+          visibleRef.current = false;
           setVisible(false);
         }
       },
@@ -173,7 +176,7 @@ export default function Experience() {
     const tick = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       grains.forEach(g => { g.update(); g.draw(); });
-      if (visible) swirls.forEach(s => { s.update(); s.draw(); });
+      if (visibleRef.current) swirls.forEach(s => { s.update(); s.draw(); });
       rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
@@ -183,7 +186,7 @@ export default function Experience() {
       window.removeEventListener('resize', resize);
       window.removeEventListener('resize', buildSwirls);
     };
-  }, [visible]);
+  }, []); // ← mount once only; visibleRef keeps RAF in sync without remounting
 
   return (
     <section id="experience" ref={sectionRef} className={styles.section}>

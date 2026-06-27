@@ -71,7 +71,7 @@ export default function Skills() {
     observer.observe(node);
 
     const onNavClick = (e) => {
-      if (e.detail === 'skills') setVisible(false);
+      if (e.detail === 'stack') setVisible(false);
     };
     window.addEventListener('nav-click', onNavClick);
 

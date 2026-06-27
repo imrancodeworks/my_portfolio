@@ -24,7 +24,7 @@ export default function Contact() {
         <div className={styles.portalRing} />
 
         <p className={styles.lede}>
-          Open to AI/ML and full-stack opportunities. Send a message and I'll usually get back within a day.
+          Is this a portfolio, a weapons cache, or a secret portal? Send a transmission to find out. I usually materialize a response within a day—unless I've been summoned to another dimension.
         </p>
         <div className={styles.links}>
           <a className={styles.primary} href="mailto:imrancodeworks@gmail.com">

@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  background: #120200;
+  background: #000000;
 }
 
 /* ══════════════════════════════════════════════════════
@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(135deg, #100100 0%, #200500 40%, #150200 70%, #0a0100 100%);
+  background: linear-gradient(135deg, #000000 0%, #180300 50%, #000000 100%);
   overflow: hidden;
   transform: translate(calc(var(--mx) * -16px), calc(var(--my) * -16px)) scale(1.05);
   will-change: transform;
@@ -477,4 +477,8 @@
     -webkit-backdrop-filter: none;
     background: rgba(8, 2, 0, 0.88);
   }
+
+  /* Reduce blob blur: 80px → 50px — blobs still visible, GPU cost halved */
+  .blob1, .blob2, .blob3, .blob4 { filter: blur(50px); }
+  .blob5 { filter: blur(60px); }
 }

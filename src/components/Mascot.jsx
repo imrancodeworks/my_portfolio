@@ -1,7 +1,62 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './Mascot.module.css';
 
+const GREETING_QUOTES = [
+  "Hi!!",
+  "Hello there!",
+  "A wild developer appears!",
+  "Summoning complete!",
+  "Welcome, traveler!",
+  "Hey! Looking for coding jutsu?"
+];
+
+const MYSTERY_QUOTES = [
+  "The portals are aligned. Do you feel the ambient waves?",
+  "The 8-Tails is watching you scroll. Be careful!",
+  "Searching for hidden parameters in your layout...",
+  "Are you here for the source code, or the secrets in the shadows?",
+  "Did you notice the watermark fade? The shadows know the way.",
+  "I've been calculating the latency of our connection...",
+  "Warning: Entering the Projects Armory may cause endless inspecting.",
+  "There is a glitch in the Matrix... or is it just my CSS grid?"
+];
+
+const PICKUP_QUOTES = [
+  "Are you a CSS grid? Because you align my layout perfectly.",
+  "My love for you is like a loop without a break statement.",
+  "Are you a git commit? Because I want to push my changes to you.",
+  "I must be FastAPI, because my heart is beating under 100ms right now.",
+  "Are you full-stack? Because you complete my backend.",
+  "Are you a machine learning model? Because you've got me overfitting.",
+  "Are you an API key? Because you unlock my full potential.",
+  "Is your name Supabase? Because you are my cloud-nine database."
+];
+
+const getRandomQuote = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const SKINS = [
+  {
+    id: 'streetwear',
+    label: '🎨',
+    title: 'Streetwear',
+    grad: ['#FF416C', '#FF4B2B', '#FF8C00', '#4BB8FA'],
+  },
+  {
+    id: 'shinobi',
+    label: '🌑',
+    title: 'Akatsuki Cloak',
+    grad: ['#1a1a2e', '#16213e', '#C0392B', '#2C3E50'],
+  },
+  {
+    id: 'cyber',
+    label: '⚡',
+    title: 'Cyber Armor',
+    grad: ['#00F5FF', '#0070FF', '#7B2FFF', '#00FF88'],
+  },
+];
+
 export default function Mascot({ isNav = false }) {
+
   const containerRef = useRef(null);
   const [phase, setPhase] = useState(0); // 0: Idle, 1: Waving ("Hi!!"), 2: Pointing + Winking
   const [showBubble, setShowBubble] = useState(false);
@@ -11,6 +66,9 @@ export default function Mascot({ isNav = false }) {
 
   const isHoveredRef = useRef(false);
   const hoverTimerRef = useRef(null);
+  const clickRecoverRef = useRef(null); // tracks the post-click recovery timer
+  const [activeSkin, setActiveSkin] = useState('streetwear');
+  const currentSkin = SKINS.find(s => s.id === activeSkin) || SKINS[0];
 
   // Sync isHovered state to ref for timer closures
   useEffect(() => {
@@ -26,17 +84,18 @@ export default function Mascot({ isNav = false }) {
       setPhase(0);
       setShowBubble(false);
 
-      // 2s - 5s: Waving + "Hi!!"
+      // 2s - 5s: Waving + greeting
       const t1 = setTimeout(() => {
         setPhase(1);
-        setBubbleText("Hi!!");
+        setBubbleText(getRandomQuote(GREETING_QUOTES));
         setShowBubble(true);
       }, 2000);
 
-      // 5s - 8s: Pointing + "This guy did some really nice work. Take a look!"
+      // 5s - 8s: Pointing + random mystery or pickup quote
       const t2 = setTimeout(() => {
         setPhase(2);
-        setBubbleText("This guy did some really nice work. Take a look!");
+        const choiceList = Math.random() > 0.5 ? MYSTERY_QUOTES : PICKUP_QUOTES;
+        setBubbleText(getRandomQuote(choiceList));
         setShowBubble(true);
       }, 5000);
 
@@ -115,15 +174,16 @@ export default function Mascot({ isNav = false }) {
   const handleMouseEnter = useCallback(() => {
     setIsHovered(true);
     setPhase(1);
-    setBubbleText("Hi!!");
+    setBubbleText(getRandomQuote(GREETING_QUOTES));
     setShowBubble(true);
 
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
 
-    // After 2 seconds of staying hovered, point and show the second bubble
+    // After 2 seconds of staying hovered, point and show a random quote
     hoverTimerRef.current = setTimeout(() => {
       setPhase(2);
-      setBubbleText("This guy did some really nice work. Take a look!");
+      const choiceList = Math.random() > 0.5 ? MYSTERY_QUOTES : PICKUP_QUOTES;
+      setBubbleText(getRandomQuote(choiceList));
       setShowBubble(true);
     }, 2000);
   }, []);
@@ -140,16 +200,28 @@ export default function Mascot({ isNav = false }) {
 
   const handleMascotClick = useCallback(() => {
     setPhase(1);
-    setBubbleText("Let's build! 🚀");
+    const clickQuotes = [
+      "Let's build! 🚀",
+      "Summoning jutsu! 🌀",
+      "Analyzing user behavior... 🤖",
+      "Loading secret protocols... 💾",
+      "Equipped with passion! ⚡"
+    ];
+    setBubbleText(getRandomQuote(clickQuotes));
     setShowBubble(true);
 
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    // Dispatch quest tracking event
+    window.dispatchEvent(new Event('mascot:click'));
 
-    setTimeout(() => {
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    if (clickRecoverRef.current) clearTimeout(clickRecoverRef.current);
+
+    clickRecoverRef.current = setTimeout(() => {
       // Re-evaluate if still hovered using ref
       if (isHoveredRef.current) {
         setPhase(2);
-        setBubbleText("This guy did some really nice work. Take a look!");
+        const choiceList = Math.random() > 0.5 ? MYSTERY_QUOTES : PICKUP_QUOTES;
+        setBubbleText(getRandomQuote(choiceList));
       } else {
         setPhase(0);
         setShowBubble(false);
@@ -160,6 +232,7 @@ export default function Mascot({ isNav = false }) {
   useEffect(() => {
     return () => {
       if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+      if (clickRecoverRef.current) clearTimeout(clickRecoverRef.current);
     };
   }, []);
 
@@ -195,15 +268,15 @@ export default function Mascot({ isNav = false }) {
         </div>
       )}
 
-      {/* Layered Vector Mascot SVG */}
+      {/* SVG */}
       <svg viewBox="0 0 300 450" className={styles.svg}>
         <defs>
-          {/* Modern Streetwear Neon/Cyberpunk Gradient for Hoodie */}
+          {/* Modern Streetwear Neon/Cyberpunk Gradient for Hoodie — skin-driven */}
           <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FF416C" />
-            <stop offset="40%" stopColor="#FF4B2B" />
-            <stop offset="70%" stopColor="#FF8C00" />
-            <stop offset="100%" stopColor="#4BB8FA" />
+            <stop offset="0%"   stopColor={currentSkin.grad[0]} />
+            <stop offset="40%"  stopColor={currentSkin.grad[1]} />
+            <stop offset="70%"  stopColor={currentSkin.grad[2]} />
+            <stop offset="100%" stopColor={currentSkin.grad[3]} />
           </linearGradient>
           {/* Volumetric Soft Skin Gradient (Pixar lighting) */}
           <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -436,6 +509,23 @@ export default function Mascot({ isNav = false }) {
           <path d="M 138 178 Q 150 188 162 178" stroke="#E74C3C" strokeWidth="2.8" fill="none" strokeLinecap="round" />
         </g>
       </svg>
+
+      {/* Skin Picker — shown only on non-nav mascot */}
+      {!isNav && (
+        <div className={styles.skinPicker}>
+          {SKINS.map(skin => (
+            <button
+              key={skin.id}
+              className={`${styles.skinDot} ${activeSkin === skin.id ? styles.skinDotActive : ''}`}
+              onClick={(e) => { e.stopPropagation(); setActiveSkin(skin.id); }}
+              title={skin.title}
+              style={{ background: `linear-gradient(135deg, ${skin.grad[0]}, ${skin.grad[3]})` }}
+            >
+              {skin.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

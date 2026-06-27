@@ -24,6 +24,8 @@
   --btn-font: 'Henny Penny', system-ui;
   --peralta: 'Peralta', serif;
   --cinzel: 'Cinzel Decorative', serif;
+  --odibee: 'Odibee Sans', sans-serif;
+  --fredericka: 'Fredericka the Great', serif;
   --maxw: 1140px;
 
   /* ── Responsive breakpoints ──
@@ -248,4 +250,29 @@ img,svg{display:block; max-width:100%;}
   svg {
     filter: none;
   }
+}
+
+/* ════════════════════════════════════════════════════════
+   CHAKRA EFFECTS — global keyframes
+   Used via inline style animation strings in ChakraEffects.jsx.
+   Must live in global CSS (not a CSS Module) so they are reachable.
+════════════════════════════════════════════════════════ */
+@keyframes vignettePulse {
+  0%   {
+    background: radial-gradient(ellipse 100% 100% at 50% 50%,
+      transparent 38%, rgba(5,5,17,0.5) 70%,
+      rgba(75,184,250,0.2) 83%, rgba(5,5,17,0.8) 100%);
+  }
+  100% {
+    background: radial-gradient(ellipse 100% 100% at 50% 50%,
+      transparent 34%, rgba(5,5,17,0.6) 68%,
+      rgba(255,106,28,0.25) 82%, rgba(5,5,17,0.9) 100%);
+  }
+}
+
+@keyframes ambientShimmer {
+  0%, 100% { opacity: 0; background: transparent; }
+  25%       { opacity: 0.04; background: radial-gradient(ellipse 60% 40% at 30% 50%, rgba(75,184,250,0.8), transparent); }
+  50%       { opacity: 0; background: transparent; }
+  75%       { opacity: 0.035; background: radial-gradient(ellipse 50% 35% at 70% 55%, rgba(255,106,28,0.7), transparent); }
 }

@@ -7,6 +7,8 @@ export default function useReveal(threshold = 0.15) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    let navClickTimer = null;
+
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -21,12 +23,14 @@ export default function useReveal(threshold = 0.15) {
     obs.observe(el);
 
     const onNavClick = (e) => {
-      if (e.detail === el.id) {
+      const targetId = el.id || el.parentElement?.id;
+      if (targetId && e.detail === targetId) {
         setInView(false);
         // Re-trigger after a frame so animations replay even if the
         // section is already in the viewport (IntersectionObserver
         // won't fire again in that case).
-        setTimeout(() => setInView(true), 80);
+        if (navClickTimer) clearTimeout(navClickTimer);
+        navClickTimer = setTimeout(() => setInView(true), 80);
       }
     };
     window.addEventListener('nav-click', onNavClick);
@@ -34,6 +38,7 @@ export default function useReveal(threshold = 0.15) {
     return () => {
       obs.disconnect();
       window.removeEventListener('nav-click', onNavClick);
+      if (navClickTimer) clearTimeout(navClickTimer);
     };
   }, [threshold]);
 
